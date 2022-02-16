@@ -2,7 +2,11 @@ import React from "react";
 import { Button, Form, Input } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { useAppDispatch, useAppSelector } from "src/store/hooks";
-import { registerAsync, selectState } from "src/store/reducer/registerSlice";
+import {
+  loginAsync,
+  registerAsync,
+  selectState,
+} from "src/store/reducer/registerSlice";
 
 const Register: React.FC<{ triggerTab: Function }> = ({ triggerTab }) => {
   const dispatch = useAppDispatch();
@@ -10,6 +14,7 @@ const Register: React.FC<{ triggerTab: Function }> = ({ triggerTab }) => {
   const stateLogin = useAppSelector(selectState);
 
   const onFinish = (values: any) => {
+    values._body = () => dispatch(loginAsync(values));
     dispatch(registerAsync(values));
   };
 

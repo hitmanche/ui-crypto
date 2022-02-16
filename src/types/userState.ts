@@ -3,4 +3,5 @@ export interface UserState {
   fullName: String;
   email: String;
   password: String;
+  _body: (email: string, password: string) => void;
 }

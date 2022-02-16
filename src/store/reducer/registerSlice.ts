@@ -40,6 +40,7 @@ export const registerAsync = createAsyncThunk(
   "register/register",
   async (userData: UserState) => {
     const response = await postRegister(userData);
+    userData._body(userData.email.toString(), userData.password.toString());
     return response;
   }
 );
