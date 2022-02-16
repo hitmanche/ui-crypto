@@ -1,14 +1,15 @@
 import React from "react";
 import { Button, Form, Input } from "antd";
 import { MailOutlined, LockOutlined } from "@ant-design/icons";
-import { loginAsync } from "src/store/reducer/registerSlice";
-import { useAppDispatch } from "src/store/hooks";
+import { loginAsync, selectState } from "src/store/reducer/registerSlice";
+import { useAppDispatch, useAppSelector } from "src/store/hooks";
 
 const Login: React.FC<{ triggerTab: Function }> = ({ triggerTab }) => {
   const dispatch = useAppDispatch();
 
+  const stateLogin = useAppSelector(selectState);
+
   const onFinish = (values: any) => {
-    console.log("Success:", values);
     dispatch(loginAsync(values));
   };
 
@@ -63,6 +64,7 @@ const Login: React.FC<{ triggerTab: Function }> = ({ triggerTab }) => {
           </Button>
           &nbsp;&nbsp;&nbsp;
           <Button
+            loading={stateLogin === "loading"}
             type="primary"
             htmlType="submit"
             className="login-form-button"

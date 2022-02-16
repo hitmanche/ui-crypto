@@ -1,35 +1,30 @@
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "src/store/hooks";
-import {
-  logout,
-  selectLogIn,
-  selectUser,
-} from "src/store/reducer/registerSlice";
-import { message } from "antd";
+import { logout, selectUser } from "src/store/reducer/registerSlice";
 import LoginPage from "src/page/login";
+import DashboardComponent from "src/page/dashboard";
+import axiosInstance from "src/api/axios";
 
-export function Authorization(props: any) {
+export function Authorization() {
   const user = useAppSelector(selectUser);
-  const loginDate = useAppSelector(selectLogIn);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    const timeoutInterval = setInterval(() => {
-      if (user._id && loginDate) {
-        if (new Date() > loginDate) {
+    axiosInstance.interceptors.response.use(
+      (response) => {
+        return response;
+      },
+      (error) => {
+        if (error.response.status === 403 || error.response.status === 401) {
           dispatch(logout());
-          message.info("Login süreniz dolmuştur.");
         }
+        return Promise.reject(error);
       }
-    }, 1000);
-
-    return () => {
-      clearInterval(timeoutInterval);
-    };
+    );
   }, [user]);
 
   if (user && user._id) {
-    return props?.children;
+    return <DashboardComponent />;
   } else {
     return <LoginPage />;
   }

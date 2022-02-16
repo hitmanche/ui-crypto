@@ -21,7 +21,7 @@ import {
   selectCurrencies,
   setBSData,
 } from "src/store/reducer/dashboardSlice";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { UserAccountState } from "src/types/userAccountState";
 import BSModal from "./bsModal";
 
@@ -49,7 +49,7 @@ export default function DashboardComponent() {
   };
 
   return (
-    <>
+    <div>
       <PageHeader
         style={{
           boxShadow: "0px 2px 4px gray",
@@ -57,6 +57,7 @@ export default function DashboardComponent() {
         title={`Hello, ${user.fullName}`}
         extra={[
           <Button
+            key="_logout"
             onClick={() => dispatch(logout())}
             type="primary"
             icon={<ExportOutlined />}
@@ -69,12 +70,14 @@ export default function DashboardComponent() {
       <div className="site-card-wrapper">
         <Row>
           {userAccount?.map((account) => (
-            <Col xs={24} md={6} lg={6}>
+            <Col xs={24} md={6} lg={6} key={account.currency.toString()}>
               <Card title={account.currency} style={{ margin: 5 }}>
                 <Typography.Title
                   style={{ display: "flex", justifyContent: "center" }}
                 >
-                  {parseFloat(account.value.$numberDecimal.toString()).toFixed(5)}
+                  {parseFloat(account.value.$numberDecimal.toString()).toFixed(
+                    5
+                  )}
                 </Typography.Title>
                 <div style={{ display: "flex", justifyContent: "center" }}>
                   <Button
@@ -101,15 +104,17 @@ export default function DashboardComponent() {
           <Col xs={24} md={12} lg={12}>
             <Table
               style={{ width: "100%" }}
-              pagination={undefined}
+              rowKey={"_id"}
               dataSource={currencies}
               columns={[
                 {
+                  key: "name",
                   title: "Currency",
                   dataIndex: "name",
                   render: (data) => <b>{"1 " + data}</b>,
                 },
                 {
+                  key: "rate",
                   title: "Value",
                   dataIndex: "rate",
                   render: (data) => <b>{data?.$numberDecimal + " BTC"}</b>,
@@ -122,6 +127,6 @@ export default function DashboardComponent() {
           <BSModal />
         </Row>
       </div>
-    </>
+    </div>
   );
 }

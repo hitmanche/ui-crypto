@@ -1,4 +1,4 @@
-import { FunctionComponent, useState } from "react";
+import React, { FunctionComponent, useState } from "react";
 import {
   Modal,
   InputNumber,
@@ -23,6 +23,9 @@ const { Option } = Select;
 interface IBSModal {}
 
 const BSModal: FunctionComponent<IBSModal> = (props) => {
+  const [loading, setLoading] = useState<boolean>(false);
+  const triggerLoading = () => setLoading((old) => !old);
+
   const dispatch = useDispatch();
   const bsData = useAppSelector(selectBSData);
   const currencies = useAppSelector(selectCurrencies);
@@ -41,6 +44,7 @@ const BSModal: FunctionComponent<IBSModal> = (props) => {
   };
 
   const sendActionCurrencyData = () => {
+    triggerLoading();
     postActionCurrency({
       newCurrency: newCurrency,
       oldCurrency: bsData.currency,
@@ -52,15 +56,17 @@ const BSModal: FunctionComponent<IBSModal> = (props) => {
         dispatch(userAccountAsync());
         message.info("The operation was successful.");
       })
-      .catch((err) => message.error(err));
+      .catch((err) => message.error(err))
+      .finally(() => triggerLoading());
   };
 
   return (
-    <>
+    <React.StrictMode>
       <Modal
         title={`${bsData.type === "B" ? "Buy" : "Sell"} ${bsData.currency}`}
         visible={bsData.open}
         okText={bsData.type === "B" ? "Buy" : "Sell"}
+        confirmLoading={loading}
         onOk={sendActionCurrencyData}
         onCancel={triggerModal}
       >
@@ -88,8 +94,8 @@ const BSModal: FunctionComponent<IBSModal> = (props) => {
             >
               {currencies
                 .filter((x) => x.name !== bsData.currency)
-                .map((currency, index) => (
-                  <Option key={index} value={currency.name}>
+                .map((currency) => (
+                  <Option key={currency.name.toString()} value={currency.name}>
                     {currency.name}
                   </Option>
                 ))}
@@ -97,7 +103,7 @@ const BSModal: FunctionComponent<IBSModal> = (props) => {
           </Col>
         </Row>
       </Modal>
-    </>
+    </React.StrictMode>
   );
 };
 

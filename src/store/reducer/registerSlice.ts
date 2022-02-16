@@ -15,7 +15,6 @@ export interface RegisterState {
   userAccount: UserAccountState[];
   token: String;
   expires: Number;
-  logIn: Date | null;
   state: "idle" | "loading";
 }
 
@@ -26,7 +25,6 @@ const initialState: RegisterState = {
   userAccount: localUserData.userAccount,
   token: localUserData.token,
   expires: localUserData.expires,
-  logIn: null,
   state: "idle",
 };
 
@@ -62,7 +60,6 @@ export const registerSlice = createSlice({
       state.user = {} as UserState;
       state.token = "";
       state.expires = 0;
-      state.logIn = null;
       state.state = "idle";
       LoginManager.clearLoginData();
     },
@@ -83,7 +80,6 @@ export const registerSlice = createSlice({
           state.token = action.payload.token;
           state.expires = action.payload.expires;
           LoginManager.setLoginData(action.payload);
-          state.logIn = new Date();
         }
       )
       .addCase(loginAsync.rejected, (state, action) => {
@@ -115,15 +111,5 @@ export const selectUserAccount = (state: RootState) =>
 export const selectToken = (state: RootState) => state.register.token;
 export const selectExpires = (state: RootState) => state.register.expires;
 export const selectState = (state: RootState) => state.register.state;
-export const selectLogIn = (state: RootState) => {
-  return (
-    state.register.logIn &&
-    new Date(
-      state.register.logIn.setSeconds(
-        Number(state.register.logIn.getSeconds()) +
-          Number(state.register.expires)
-      )
-    )
-  );
-};
+
 export default registerSlice.reducer;
