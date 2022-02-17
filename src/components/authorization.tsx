@@ -21,7 +21,7 @@ export function Authorization() {
         return Promise.reject(error);
       }
     );
-  }, [user]);
+  }, [dispatch, user]);
 
   if (user && user._id) {
     return <DashboardComponent />;

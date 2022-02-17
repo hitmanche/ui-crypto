@@ -5,8 +5,8 @@ const axiosInstance = axios.create();
 
 axiosInstance.defaults.baseURL =
   process.env.NODE_ENV === "production"
-    ? process.env.REACT_APP_API_URL_PROD
-    : process.env.REACT_APP_API_URL_DEV;
+    ? "https://crypto-exchange-meditopia.herokuapp.com/"
+    : "http://localhost:4500/";
 axiosInstance.defaults.timeout = 25000;
 axiosInstance.defaults.headers.common["Content-Type"] = "application/json";
 axiosInstance.defaults.headers.common["Accept"] = "application/json";

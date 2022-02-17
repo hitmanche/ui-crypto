@@ -1,13 +1,4 @@
-import {
-  Button,
-  Card,
-  Col,
-  PageHeader,
-  Row,
-  Space,
-  Table,
-  Typography,
-} from "antd";
+import { Button, Card, Col, PageHeader, Row, Table, Typography } from "antd";
 import { useAppSelector } from "src/store/hooks";
 import {
   logout,
@@ -21,7 +12,7 @@ import {
   selectCurrencies,
   setBSData,
 } from "src/store/reducer/dashboardSlice";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { UserAccountState } from "src/types/userAccountState";
 import BSModal from "./bsModal";
 
@@ -35,7 +26,7 @@ export default function DashboardComponent() {
     if (currencies.length < 1) {
       dispatch(currenciesAsync());
     }
-  }, []);
+  }, [currencies, dispatch]);
 
   const clickTrigger = (account: UserAccountState, type: "B" | "S") => {
     dispatch(
